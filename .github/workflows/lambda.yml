@@ -2,23 +2,24 @@ on:
   push:
     branches:
       - master
+
 name: Deploy branch to Chalice
+
 jobs:
-  deploy:
-    name: deploy
+  build:
 
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
+
     steps:
-    - uses: actions/checkout@master
-    - name: chalice deploy
-      uses: jayef0/chalice-extended-action@release-v0.2.1
-      env:
-        REQUIREMENTS_FILE: requirements.txt
-        OPERATION: deploy
-        STAGE: dev
-        TDA_API_KEY: ${{ secrets.TDA_API_KEY }}
-        PASSPHRASE: ${{ secrets.PASSPHRASE }}
-        TDA_TOKEN: ${{ secrets.TDA_TOKEN }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: us-west-2
+      - uses: actions/checkout@v3
+      - name: chalice deploy
+        uses: 5tigerjelly/chalice-action@master
+        with:
+          args: deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-west-2
