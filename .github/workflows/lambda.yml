@@ -6,6 +6,11 @@ name: Deploy branch to Chalice
 jobs:
   deploy:
     name: deploy
+    env:
+      TDA_API_KEY: ${{ secrets.TDA_API_KEY }}
+      PASSPHRASE: ${{ secrets.PASSPHRASE }}
+      TDA_TOKEN: ${{ secrets.TDA_TOKEN }}
+
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master

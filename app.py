@@ -11,13 +11,9 @@ import shutil
 app = Chalice(app_name='tradingApp')
 app.log.setLevel(logging.DEBUG)
 
-f = open('chalicelib/apiKey', 'r')
-api_key = f.readline()
-f.close()
-
-f = open('chalicelib/passphrase', 'r')
-password = f.readline()
-f.close()
+api_key = os.environ['TDA_API_KEY']
+password = os.environ['PASSPHRASE']
+token_text = os.environ['TDA_TOKEN']
 
 acct_id = 237441143
 symbol = "SPY"
@@ -28,8 +24,14 @@ global longQty
 global shortPos
 global shortQty
 
+
+f = open("token", "a")
+f.write(token_text)
+f.close()
+
+
 # Note that the default token path is read-only
-default_token_path = os.path.join(os.path.dirname(__file__), 'chalicelib', 'token')
+default_token_path = os.path.join(os.path.dirname(__file__), 'token')
 
 # This path is not read-only on Lambda
 aws_token_path = "/tmp/token"
