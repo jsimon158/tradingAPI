@@ -5,7 +5,6 @@ from tda import auth
 from tda.orders.options import OptionSymbol
 import datetime
 from chalice import Chalice
-import shutil
 
 
 app = Chalice(app_name='tradingApp')
@@ -25,13 +24,13 @@ global shortPos
 global shortQty
 
 
-f = open("token", "a")
+f = open("/tmp/token", "w")
 f.write(token_text)
 f.close()
 
 
 # Note that the default token path is read-only
-default_token_path = os.path.join(os.path.dirname(__file__), 'token')
+#default_token_path = os.path.join(os.path.dirname(__file__), 'token')
 
 # This path is not read-only on Lambda
 aws_token_path = "/tmp/token"
@@ -42,12 +41,7 @@ try:
     # Try to authenticate to tda
     c = auth.client_from_token_file(aws_token_path, api_key)
 except:
-    try :
-        # Move token file from chalice lib to EFS
-        shutil.copyfile(default_token_path, aws_token_path)
-        c = auth.client_from_token_file(aws_token_path, api_key)
-    except:
-        app.log.error("Unable to authenticate with tda, check that token file is not broken")
+    app.log.error("Unable to authenticate with tda, check that token file is not broken")
 
     # Use this code commented out locally to get a new token file
     #app.log.warning("Token file not found, trying to find from driver. Can not run this on AWS Lambda")
