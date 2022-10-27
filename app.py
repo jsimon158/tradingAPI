@@ -237,7 +237,7 @@ def option_order():
                 "code": "error",
                 "message": "Wrong password long position"
             }
-
+ 
         if "buy" in webhook_message['action']:
             # Get next Friday after today's date
             nextFriday, rangeFriday = getNextFriday(datetime.date.today())
