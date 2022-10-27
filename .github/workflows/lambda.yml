@@ -1,9 +1,6 @@
-on:
-  push:
-    branches:
-      - master
+name: Python package
 
-name: Deploy branch to Chalice
+on: [push]
 
 jobs:
   build:
@@ -15,11 +12,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: chalice deploy
-        uses: 5tigerjelly/chalice-action@master
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
         with:
-          args: deploy
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: us-west-2
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
