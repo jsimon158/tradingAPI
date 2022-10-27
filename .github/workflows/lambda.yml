@@ -1,37 +1,21 @@
-name: Python package
-
-on: [push]
-
+on:
+  push:
+    branches:
+      - master
+name: Deploy branch to Chalice
 jobs:
-  build:
-
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.7"]
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          
   deploy:
+    name: deploy
     runs-on: ubuntu-latest
-    
     steps:
-        - name: checkout source code
-          uses: actions/checkout@v1
-        - name: default deploy
-          uses: appleboy/lambda-action@master
-          with:
-            aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws_region: ${{ secrets.AWS_REGION }}
-            function_name: ehlers-dev
-            source: app.py
+    - uses: actions/checkout@master
+    - name: chalice deploy
+      uses: jayef0/chalice-extended-action@release-v0.2.1
+      env:
+        WORKING_DIRECTORY: .
+        REQUIREMENTS_FILE: requirements.txt
+        OPERATION: deploy
+        STAGE: dev
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: us-west-2
