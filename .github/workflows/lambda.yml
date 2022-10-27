@@ -12,7 +12,6 @@ jobs:
     - name: chalice deploy
       uses: jayef0/chalice-extended-action@release-v0.2.1
       env:
-        WORKING_DIRECTORY: .
         REQUIREMENTS_FILE: requirements.txt
         OPERATION: deploy
         STAGE: dev
