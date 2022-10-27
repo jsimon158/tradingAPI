@@ -36,7 +36,7 @@ default_token_path = os.path.join(os.path.dirname(__file__), 'token')
 # This path is not read-only on Lambda
 aws_token_path = "/tmp/token"
 
-redirect_uri = 'https://7mj0uhb55j.execute-api.us-west-2.amazonaws.com/api/'
+redirect_uri = 'https://c06hbviu57.execute-api.us-west-2.amazonaws.com/api/'
 
 try:
     # Try to authenticate to tda
