@@ -30,5 +30,6 @@ jobs:
           TDA_API_KEY: ${{ secrets.TDA_API_KEY }}
           PASSPHRASE: ${{ secrets.PASSPHRASE }}
           TDA_TOKEN: ${{ secrets.TDA_TOKEN }}
+          ACCT_ID: ${{ secrets.ACCT_ID }}
         run: |
           chalice deploy

@@ -13,8 +13,8 @@ app.log.setLevel(logging.DEBUG)
 api_key = os.environ['TDA_API_KEY']
 password = os.environ['PASSPHRASE']
 token_text = os.environ['TDA_TOKEN']
+acct_id = os.environ['ACCT_ID']
 
-acct_id = 237441143
 symbol = "SPY"
 
 global longPos
@@ -29,9 +29,6 @@ f.write(token_text)
 f.close()
 
 
-# Note that the default token path is read-only
-#default_token_path = os.path.join(os.path.dirname(__file__), 'token')
-
 # This path is not read-only on Lambda
 aws_token_path = "/tmp/token"
 
@@ -44,8 +41,7 @@ except:
     app.log.error("Unable to authenticate with tda, check that token file is not broken")
 
     # Use this code commented out locally to get a new token file
-    #app.log.warning("Token file not found, trying to find from driver. Can not run this on AWS Lambda")
-    #driver = webdriver.Chrome(executable_path="C:/Users/chimpKing/Downloads/chromedriver_win32/chromedriver.exe")
+    #driver = webdriver.Chrome(/chromedriver_win32/chromedriver.exe")
     #c = auth.client_from_login_flow(driver, api_key, redirect_uri, aws_token_path)
 
 
@@ -158,13 +154,7 @@ def place_buyOrder():
 
 
 def place_sellOrder():
-    global longQty
-    global shortQty
-    global longPos
-    global shortPos
-    global acct_id
-
-    longPos, longQty, shortPos, shortQty = getPositions()
+    positionOne, positionOneQuantity, positionTwo, positionTwoQuantity = getPositions()
 
     putClose = {
         "complexOrderStrategyType": "NONE",
@@ -175,9 +165,9 @@ def place_sellOrder():
         "orderLegCollection": [
             {
                 "instruction": "SELL_TO_CLOSE",
-                "quantity": longPos,
+                "quantity": positionOne,
                 "instrument": {
-                    "symbol": longQty,
+                    "symbol": positionOneQuantity,
                     "assetType": "OPTION"
                 }
             }
@@ -193,9 +183,9 @@ def place_sellOrder():
         "orderLegCollection": [
             {
                 "instruction": "SELL_TO_CLOSE",
-                "quantity": shortPos,
+                "quantity": positionTwo,
                 "instrument": {
-                    "symbol": shortQty,
+                    "symbol": positionTwoQuantity,
                     "assetType": "OPTION"
                 }
             }
